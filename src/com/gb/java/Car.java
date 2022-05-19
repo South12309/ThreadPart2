@@ -15,6 +15,7 @@ public class Car implements Runnable {
     private String name;
     private CyclicBarrier cyclicBarrier;
     private CountDownLatch countDownLatch;
+    private static boolean winnerFound;
 
     public String getName() {
         return name;
@@ -33,6 +34,13 @@ public class Car implements Runnable {
         this.countDownLatch = countDownLatch;
     }
 
+    private static synchronized void checkWinner(Car car) {
+        if (!winnerFound) {
+            System.out.println(car.name + " - WIN");
+            winnerFound = true;
+        }
+    }
+
     @Override
     public void run() {
         try {
@@ -47,6 +55,7 @@ public class Car implements Runnable {
         for (int i = 0; i < race.getStages().size(); i++) {
             race.getStages().get(i).go(this);
         }
+        checkWinner(this);
         countDownLatch.countDown();
     }
 }
