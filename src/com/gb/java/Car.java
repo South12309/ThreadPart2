@@ -13,7 +13,7 @@ public class Car implements Runnable {
     private Race race;
     private int speed;
     private String name;
-    private CyclicBarrier clb;
+    private CyclicBarrier cyclicBarrier;
     private CountDownLatch countDownLatch;
 
     public String getName() {
@@ -24,12 +24,12 @@ public class Car implements Runnable {
         return speed;
     }
 
-    public Car(Race race, int speed, CyclicBarrier clb, CountDownLatch countDownLatch) {
+    public Car(Race race, int speed, CyclicBarrier cyclicBarrier, CountDownLatch countDownLatch) {
         this.race = race;
         this.speed = speed;
         CARS_COUNT++;
         this.name = "Участник #" + CARS_COUNT;
-        this.clb = clb;
+        this.cyclicBarrier = cyclicBarrier;
         this.countDownLatch = countDownLatch;
     }
 
@@ -39,7 +39,8 @@ public class Car implements Runnable {
             System.out.println(this.name + " готовится");
             Thread.sleep(500 + (int) (Math.random() * 800));
             System.out.println(this.name + " готов");
-            clb.await();
+            cyclicBarrier.await();
+            cyclicBarrier.await();
         } catch (Exception e) {
             e.printStackTrace();
         }
