@@ -1,5 +1,6 @@
 package com.gb.java;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 
 public class Car implements Runnable {
@@ -13,6 +14,7 @@ public class Car implements Runnable {
     private int speed;
     private String name;
     private CyclicBarrier clb;
+    private CountDownLatch countDownLatch;
 
     public String getName() {
         return name;
@@ -22,12 +24,13 @@ public class Car implements Runnable {
         return speed;
     }
 
-    public Car(Race race, int speed, CyclicBarrier clb) {
+    public Car(Race race, int speed, CyclicBarrier clb, CountDownLatch countDownLatch) {
         this.race = race;
         this.speed = speed;
         CARS_COUNT++;
         this.name = "Участник #" + CARS_COUNT;
         this.clb = clb;
+        this.countDownLatch = countDownLatch;
     }
 
     @Override
@@ -43,5 +46,6 @@ public class Car implements Runnable {
         for (int i = 0; i < race.getStages().size(); i++) {
             race.getStages().get(i).go(this);
         }
+        countDownLatch.countDown();
     }
 }
